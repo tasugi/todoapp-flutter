@@ -24,6 +24,7 @@ class NewTask extends StatelessWidget {
               onPressed: () {
                 final Task task = Task('New task', '');
                 Provider.of<TodoListModel>(context, listen: false).add(task);
+                Navigator.pop(context);
               },
               child: Text('Add'),
             ),
