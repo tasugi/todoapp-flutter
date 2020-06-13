@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'main.dart';
+import 'task.dart';
 
 class NewTask extends StatelessWidget {
   @override
@@ -18,7 +22,8 @@ class NewTask extends StatelessWidget {
             alignment: Alignment.center,
             child: RaisedButton(
               onPressed: () {
-
+                final Task task = Task('New task', '');
+                Provider.of<TodoListModel>(context, listen: false).add(task);
               },
               child: Text('Add'),
             ),

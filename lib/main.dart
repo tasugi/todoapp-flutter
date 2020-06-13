@@ -1,42 +1,48 @@
-import 'package:flutter/material.dart';
-import 'package:todoapp/newTask.dart';
+import 'dart:collection';
 
-void main() => runApp(MyApp());
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoapp/new_task.dart';
+
+import 'task.dart';
+
+void main() => runApp(ChangeNotifierProvider(
+      create: (context) => TodoListModel(),
+      child: MyApp(),
+    ));
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Todo App',
-        home: Todo(),
+      title: 'Todo App',
+      home: Todo(),
     );
   }
 }
 
 class TaskList extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    final tasks = [
-      'Task 1',
-      'Task 2',
-    ];
-    final tiles = tasks.map((String task) {
-      return ListTile(
-        title: Text(
-          task,
-        ),
-      );
-    });
-    final divided =
-    ListTile.divideTiles(context: context, tiles: tiles).toList();
-    return ListView(children: divided);
+    return Consumer<TodoListModel>(
+      builder: (context, todolist, child) {
+        final tiles = todolist.tasks.map((Task task) {
+          return ListTile(
+            title: Text(
+              task.title,
+            ),
+          );
+        });
+        final divided =
+            ListTile.divideTiles(context: context, tiles: tiles).toList();
+        return ListView(children: divided);
+      },
+    );
   }
 }
 
 class Todo extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,16 +52,26 @@ class Todo extends StatelessWidget {
       body: TaskList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return NewTask();
-                  }
-              )
-          );
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (BuildContext context) {
+            return NewTask();
+          }));
         },
         child: Icon(Icons.add),
       ),
     );
+  }
+}
+
+class TodoListModel extends ChangeNotifier {
+  final List<Task> _tasks = [
+    Task('Task 1', ''),
+  ];
+
+  UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
+
+  void add(Task task) {
+    _tasks.add(task);
+    notifyListeners();
   }
 }
