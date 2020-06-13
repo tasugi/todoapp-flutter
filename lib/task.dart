@@ -1,6 +1,6 @@
 class Task {
-  const Task(this.title, this.description);
+  Task(this.title);
 
   final String title;
-  final String description;
+  bool open = true;
 }

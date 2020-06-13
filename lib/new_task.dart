@@ -11,20 +11,55 @@ class NewTask extends StatelessWidget {
       appBar: AppBar(
         title: Text('Create New Task'),
       ),
-      body: Column(
+      body: TaskForm(),
+    );
+  }
+}
+
+class TaskForm extends StatefulWidget {
+  @override
+  TaskFromState createState() {
+    return TaskFromState();
+  }
+}
+
+class TaskFromState extends State<TaskForm> {
+  final _formKey = GlobalKey<FormState>();
+  final _titleController = TextEditingController();
+
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text('Title'),
-          TextFormField(),
-          Text('Description'),
-          TextFormField(),
+          TextFormField(
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter title';
+              }
+              return null;
+            },
+            controller: _titleController,
+          ),
           Align(
             alignment: Alignment.center,
             child: RaisedButton(
               onPressed: () {
-                final Task task = Task('New task', '');
-                Provider.of<TodoListModel>(context, listen: false).add(task);
-                Navigator.pop(context);
+                if (_formKey.currentState.validate()) {
+                  final Task task = Task(_titleController.text);
+                  Provider.of<TodoListModel>(context, listen: false).add(task);
+                  Navigator.pop(context);
+                }
               },
               child: Text('Add'),
             ),

@@ -27,10 +27,13 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TodoListModel>(
       builder: (context, todolist, child) {
-        final tiles = todolist.tasks.map((Task task) {
+        final tiles = todolist.openTasks.map((Task task) {
           return ListTile(
-            title: Text(
-              task.title,
+            title: Row(
+              children: <Widget>[
+                Icon(Icons.radio_button_unchecked),
+                Text(task.title)
+              ],
             ),
           );
         });
@@ -64,11 +67,12 @@ class Todo extends StatelessWidget {
 }
 
 class TodoListModel extends ChangeNotifier {
-  final List<Task> _tasks = [
-    Task('Task 1', ''),
-  ];
+  final List<Task> _tasks = [];
 
   UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
+
+  UnmodifiableListView<Task> get openTasks =>
+      UnmodifiableListView(_tasks.where((task) => task.open));
 
   void add(Task task) {
     _tasks.add(task);
