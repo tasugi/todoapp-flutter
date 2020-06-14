@@ -3,4 +3,8 @@ class Task {
 
   final String title;
   bool open = true;
+
+  void toggleOpen() {
+    open = !open;
+  }
 }

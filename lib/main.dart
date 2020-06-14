@@ -27,14 +27,16 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<TodoListModel>(
       builder: (context, todolist, child) {
-        final tiles = todolist.openTasks.map((Task task) {
+        final tiles = todolist.tasks.map((Task task) {
+          final index = todolist.tasks.indexOf(task);
+          final icon = Icon(task.open
+              ? Icons.radio_button_unchecked
+              : Icons.radio_button_checked);
           return ListTile(
             title: Row(
-              children: <Widget>[
-                Icon(Icons.radio_button_unchecked),
-                Text(task.title)
-              ],
+              children: <Widget>[icon, Text(task.title)],
             ),
+            onTap: () => {todolist.toggleOpen(index)},
           );
         });
         final divided =
@@ -76,6 +78,12 @@ class TodoListModel extends ChangeNotifier {
 
   void add(Task task) {
     _tasks.add(task);
+    notifyListeners();
+  }
+
+  /// 完了/未完了の状態をトグルする
+  void toggleOpen(int index) {
+    _tasks[index].toggleOpen();
     notifyListeners();
   }
 }
