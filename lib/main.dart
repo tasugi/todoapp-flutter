@@ -46,7 +46,9 @@ class TaskList extends StatelessWidget {
             onTap: () => {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (BuildContext context) {
-                    return TaskDetail();
+                    return TaskDetail(
+                      task: task,
+                    );
                   }))
             },
           );

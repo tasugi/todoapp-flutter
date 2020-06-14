@@ -1,28 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'todo_list_model.dart';
+import 'package:todoapp/task.dart';
 
 class TaskDetail extends StatelessWidget {
+  final Task task;
+
+  TaskDetail({Key key, @required this.task}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Task Detail'),
-      ),
-      body: TaskDetailBody(),
-    );
-  }
-}
-
-class TaskDetailBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<TodoListModel>(
-      builder: (context, todolist, child) {
-        final task = todolist.getTask(0);
-        return Column(
+        appBar: AppBar(
+          title: Text('Task Detail'),
+        ),
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text('Title'),
@@ -36,8 +27,6 @@ class TaskDetailBody extends StatelessWidget {
               child: Text(task.description),
             ),
           ],
-        );
-      },
-    );
+        ));
   }
 }
