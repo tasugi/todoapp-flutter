@@ -1,10 +1,10 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todoapp/new_task.dart';
 
 import 'task.dart';
+import 'task_detail.dart';
+import 'todo_list_model.dart';
 
 void main() => runApp(ChangeNotifierProvider(
       create: (context) => TodoListModel(),
@@ -34,9 +34,21 @@ class TaskList extends StatelessWidget {
               : Icons.radio_button_checked);
           return ListTile(
             title: Row(
-              children: <Widget>[icon, Text(task.title)],
+              children: <Widget>[
+                GestureDetector(
+                  child: icon,
+                  onTap: () => {
+                    todolist.toggleOpen(index)
+                  },
+                ),
+                Text(task.title)],
             ),
-            onTap: () => {todolist.toggleOpen(index)},
+            onTap: () => {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return TaskDetail();
+                  }))
+            },
           );
         });
         final divided =
@@ -68,22 +80,3 @@ class Todo extends StatelessWidget {
   }
 }
 
-class TodoListModel extends ChangeNotifier {
-  final List<Task> _tasks = [];
-
-  UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
-
-  UnmodifiableListView<Task> get openTasks =>
-      UnmodifiableListView(_tasks.where((task) => task.open));
-
-  void add(Task task) {
-    _tasks.add(task);
-    notifyListeners();
-  }
-
-  /// 完了/未完了の状態をトグルする
-  void toggleOpen(int index) {
-    _tasks[index].toggleOpen();
-    notifyListeners();
-  }
-}
